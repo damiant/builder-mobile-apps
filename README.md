@@ -6,6 +6,11 @@ This is a demonstration of iOS and Android projects that were built using a Buil
 - Xcode and Android Studio installed
 - Node installed
 
+## Launching Builder
+For Mobile apps there are 2 routes you can take:
+- Use the [Builder Extension](https://marketplace.visualstudio.com/items?itemName=Builder.Builder) in your IDE (Cursor, VS Code etc)
+- Use the [Builder Desktop App](https://www.builder.io/desktop-app) via CLI by running `npx @builder.io/dev-tools@latest launch --app --chat`
+
 ## How?
 - A blank iOS app was created using Xcode.
 - A blank Android app was created using Android Studio.
