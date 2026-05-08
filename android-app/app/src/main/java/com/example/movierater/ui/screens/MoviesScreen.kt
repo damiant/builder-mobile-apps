@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -31,7 +32,8 @@ fun MoviesScreen(
 ) {
     val query by viewModel.searchQuery.collectAsStateWithLifecycle()
     val favorites by viewModel.favoriteIds.collectAsStateWithLifecycle()
-    val movies = viewModel.searchedMovies()
+    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
+    val movies by viewModel.allMovies.collectAsStateWithLifecycle()
 
     LazyColumn(
         modifier = modifier.fillMaxSize(),
@@ -60,7 +62,16 @@ fun MoviesScreen(
                 modifier = Modifier.fillMaxWidth(),
             )
         }
-        if (movies.isEmpty()) {
+        if (isLoading) {
+            item {
+                Box(
+                    modifier = Modifier.fillMaxWidth().padding(top = 64.dp),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    CircularProgressIndicator()
+                }
+            }
+        } else if (movies.isEmpty()) {
             item {
                 Box(
                     modifier = Modifier.fillMaxWidth().padding(top = 64.dp),

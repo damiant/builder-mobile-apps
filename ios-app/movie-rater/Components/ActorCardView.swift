@@ -27,7 +27,6 @@ struct ActorCardView: View {
             }
             .frame(width: 52, height: 52)
             .clipShape(Circle())
-            .onTapGesture { onTap?() }
 
             Text(name)
                 .font(.caption2)
@@ -37,7 +36,20 @@ struct ActorCardView: View {
                 .frame(width: 60)
         }
         .contentShape(Rectangle())
-        .onTapGesture { onTap?() }
+        .modifier(TapIfPresent(onTap: onTap))
+    }
+
+    private struct TapIfPresent: ViewModifier {
+        let onTap: (() -> Void)?
+        func body(content: Content) -> some View {
+            if let onTap {
+                content.highPriorityGesture(
+                    TapGesture().onEnded { onTap() }
+                )
+            } else {
+                content
+            }
+        }
     }
 
     private var initials: String {

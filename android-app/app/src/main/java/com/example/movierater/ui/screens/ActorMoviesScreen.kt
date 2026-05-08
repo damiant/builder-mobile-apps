@@ -13,13 +13,17 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,7 +31,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.movierater.MovieViewModel
-import com.example.movierater.data.MockData
+import com.example.movierater.data.Actor
+import com.example.movierater.data.Movie
+import com.example.movierater.data.MovieService
 import com.example.movierater.ui.components.ActorLarge
 import com.example.movierater.ui.components.MovieCardLarge
 
@@ -40,9 +46,18 @@ fun ActorMoviesScreen(
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
 ) {
-    val actor = remember(actorId) { MockData.actorById(actorId) }
-    val movies = remember(actorId) { MockData.moviesForActor(actorId) }
+    var actor by remember { mutableStateOf<Actor?>(null) }
+    var movies by remember { mutableStateOf<List<Movie>>(emptyList()) }
+    var isLoading by remember { mutableStateOf(true) }
     val favorites by viewModel.favoriteIds.collectAsStateWithLifecycle()
+
+    LaunchedEffect(actorId) {
+        isLoading = true
+        actor = MovieService.getActor(actorId)
+        movies = MovieService.getActorMovies(actorId)
+        viewModel.cacheMovies(movies)
+        isLoading = false
+    }
 
     Box(
         modifier = modifier
@@ -74,7 +89,13 @@ fun ActorMoviesScreen(
                     )
                 }
             }
-            if (actor == null) {
+            if (isLoading) {
+                item {
+                    Box(modifier = Modifier.fillMaxWidth().padding(top = 80.dp), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator(color = Color.White)
+                    }
+                }
+            } else if (actor == null) {
                 item {
                     Box(modifier = Modifier.fillMaxWidth().padding(top = 80.dp), contentAlignment = Alignment.Center) {
                         Text("Actor not found", color = Color.White)
@@ -82,7 +103,10 @@ fun ActorMoviesScreen(
                 }
             } else {
                 item {
-                    ActorLarge(actor = actor, movieCount = movies.size)
+                    val currentActor = actor
+                    if (currentActor != null) {
+                        ActorLarge(actor = currentActor, movieCount = movies.size)
+                    }
                 }
                 if (movies.isEmpty()) {
                     item {

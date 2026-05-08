@@ -1,7 +1,7 @@
 import SwiftUI
 import SafariServices
 
-private struct ActorLink: Identifiable, Hashable {
+struct ActorLink: Identifiable, Hashable {
     let id: Int // actor ID
 }
 
@@ -9,7 +9,8 @@ struct MovieDetailView: View {
     let movie: Movie
     @EnvironmentObject private var movieService: MovieService
     @State private var showTrailer = false
-    @State private var actorLink: ActorLink? = nil
+    @State private var selectedActorId: Int? = nil
+    @State private var isActorNavigationActive = false
 
     var isSaved: Bool { movieService.isSaved(movie.id) }
 
@@ -27,13 +28,11 @@ struct MovieDetailView: View {
                 .padding(20)
             }
         }
+        .background(actorNavigationLink)
         .navigationTitle(movie.title)
         .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $showTrailer) {
             trailerSheet
-        }
-        .navigationDestination(item: $actorLink) { link in
-            ActorMoviesView(actorId: link.id)
         }
     }
 
@@ -132,16 +131,36 @@ struct MovieDetailView: View {
                     HStack(spacing: 16) {
                         ForEach(Array(movie.actors.enumerated()), id: \.offset) { index, actor in
                             let actorId = index < movie.actorIds.count ? movie.actorIds[index] : 0
-                            ActorCardView(
-                                name: actor,
-                                imageUrl: index < movie.actorImages.count ? movie.actorImages[index] : "",
-                                onTap: actorId != 0 ? { actorLink = ActorLink(id: actorId) } : nil
-                            )
+                            let imageUrl = index < movie.actorImages.count ? movie.actorImages[index] : ""
+                            if actorId != 0 {
+                                Button {
+                                    selectedActorId = actorId
+                                    isActorNavigationActive = true
+                                } label: {
+                                    ActorCardView(name: actor, imageUrl: imageUrl)
+                                }
+                                .buttonStyle(.plain)
+                            } else {
+                                ActorCardView(name: actor, imageUrl: imageUrl)
+                            }
                         }
                     }
                 }
             }
         }
+    }
+
+    private var actorNavigationLink: some View {
+        NavigationLink(isActive: $isActorNavigationActive) {
+            if let selectedActorId {
+                ActorMoviesView(actorId: selectedActorId)
+            } else {
+                EmptyView()
+            }
+        } label: {
+            EmptyView()
+        }
+        .hidden()
     }
 
     @ViewBuilder

@@ -9,6 +9,7 @@ struct MoviesView: View {
     @State private var searchTask: Task<Void, Never>? = nil
     @State private var displayMovies: [Movie] = []
     @State private var selectedMovie: Movie? = nil
+    @State private var selectedActorLink: ActorLink? = nil
 
     var body: some View {
         NavigationStack {
@@ -76,6 +77,9 @@ struct MoviesView: View {
             .navigationDestination(item: $selectedMovie) { movie in
                 MovieDetailView(movie: movie)
             }
+            .navigationDestination(item: $selectedActorLink) { link in
+                ActorMoviesView(actorId: link.id)
+            }
         }
     }
 
@@ -89,7 +93,7 @@ struct MoviesView: View {
                         isFavorited: movieService.isSaved(movie.id),
                         limitActors: 3,
                         onFavoriteTap: { movieService.toggleSave(movie.id) },
-                        onActorTap: { _ in }
+                        onActorTap: { actorId in selectedActorLink = ActorLink(id: actorId) }
                     )
                     .padding(.horizontal)
                     .contentShape(Rectangle())

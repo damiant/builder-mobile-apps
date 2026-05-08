@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
@@ -42,6 +43,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -65,9 +67,11 @@ fun MovieDetailsScreen(
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
 ) {
-    val movie = remember(movieId) { MockData.movieById(movieId) }
+    val allMoviesMap by viewModel.allMoviesMap.collectAsStateWithLifecycle()
+    val movie = remember(movieId, allMoviesMap) { allMoviesMap[movieId] }
     val favorites by viewModel.favoriteIds.collectAsStateWithLifecycle()
     val context = LocalContext.current
+    val screenHeightDp = LocalConfiguration.current.screenHeightDp.dp
 
     if (movie == null) {
         Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -104,7 +108,7 @@ fun MovieDetailsScreen(
                     IconButton(
                         onClick = onBack,
                         modifier = Modifier
-                            .padding(top = contentPadding.calculateTopPadding() + 8.dp, start = 8.dp)
+                            .padding(top = screenHeightDp * 0.1f, start = 16.dp)
                             .size(44.dp)
                             .clip(CircleShape)
                             .background(Color.Black.copy(alpha = 0.55f)),
@@ -167,7 +171,7 @@ fun MovieDetailsScreen(
                                     Intent(Intent.ACTION_VIEW, movie.link.toUri())
                                 )
                             },
-                            modifier = Modifier.weight(1f),
+                            modifier = Modifier.widthIn(max = 90.dp),
                         ) {
                             Text("IMDB")
                         }
