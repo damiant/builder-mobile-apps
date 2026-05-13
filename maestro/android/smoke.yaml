@@ -1,0 +1,11 @@
+appId: com.example.movierater
+---
+- launchApp:
+    clearState: true
+- assertVisible: "Movies"
+- assertVisible:
+    text: ".*favorite.*"
+- tapOn:
+    text: ".*favorite.*"
+- assertVisible: "Favorites"
+- tapOn: "Movies"

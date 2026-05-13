@@ -1,0 +1,9 @@
+appId: com.builder.lunch.movie-rater
+---
+- launchApp:
+    clearState: true
+- assertVisible: "Movies"
+- assertVisible: "Favorites"
+- tapOn: "Favorites"
+- assertVisible: "Favorites"
+- tapOn: "Movies"

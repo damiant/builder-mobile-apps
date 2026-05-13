@@ -1,0 +1,12 @@
+{
+  "servers": {
+    "builder-mcp": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "@builder.io/dev-tools@latest",
+        "mcp"
+      ]
+    }
+  }
+}
