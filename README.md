@@ -14,6 +14,7 @@ For Mobile apps there are 2 routes you can take:
 ## How?
 - A blank iOS app was created using Xcode.
 - A blank Android app was created using Android Studio.
+- A blank React Native app was created using `npx create-expo-app@latest react-native-app --yes`
 - Use the Builder VS Code extension (`Code` tab) or run the desktop app `npx @builder.io/dev-tools@latest launch --app --chat`
 - Ask builder to `Run npx builder-doctor install-skill android-native`
 - Ask builder to `Run npx builder-doctor install-skill ios-native`
