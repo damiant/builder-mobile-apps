@@ -1,0 +1,17 @@
+[
+  {
+    "name": "ActorCardView",
+    "description": "A compact card displaying an actor's avatar (circular image with initials fallback) and name, with optional tap handler for navigation.",
+    "relatedComponents": ["MovieCardView"],
+    "relevantFiles": ["movie-rater/Components/ActorCardView.swift"]
+  },
+  {
+    "name": "MovieCardView",
+    "description": "A rich card displaying a movie's poster, title, year, rating badge, description, and a horizontal cast strip with favorite toggle button.",
+    "relatedComponents": ["ActorCardView"],
+    "relevantFiles": [
+      "movie-rater/Components/MovieCardView.swift",
+      "movie-rater/Models/Movie.swift"
+    ]
+  }
+]
