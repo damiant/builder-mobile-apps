@@ -6,7 +6,7 @@ This is a demonstration of iOS and Android projects that were built using a Buil
 
 ## Prerequisites
 - Xcode and Android Studio installed
-- Node installed
+- Node installed (optional if using the desktop app)
 
 ## Launching Builder
 For Mobile apps there are 2 routes you can take:
