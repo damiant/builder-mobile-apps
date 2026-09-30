@@ -59,7 +59,7 @@ struct MoviesView: View {
                     }
                 }
             }
-            .navigationTitle("Movie Rater")
+            .navigationTitle("Rate Movies")
             .searchable(text: $searchText, prompt: "Search for movies...")
             .onChange(of: searchText) { _, newValue in
                 handleSearch(query: newValue)
