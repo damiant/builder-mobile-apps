@@ -8,6 +8,7 @@ struct ActorMoviesView: View {
     @State private var movies: [Movie] = []
     @State private var isLoading = true
     @State private var selectedMovie: Movie? = nil
+    @State private var showsNavigationTitle = false
 
     private let columns = [GridItem(.flexible()), GridItem(.flexible())]
 
@@ -44,9 +45,14 @@ struct ActorMoviesView: View {
                     }
                     .padding(.bottom, 20)
                 }
+                .onScrollGeometryChange(for: Bool.self) { geometry in
+                    geometry.contentOffset.y + geometry.contentInsets.top > geometry.containerSize.height * 0.3
+                } action: { _, shouldShowTitle in
+                    showsNavigationTitle = shouldShowTitle
+                }
             }
         }
-        .navigationTitle(actor?.name ?? "Actor")
+        .navigationTitle(showsNavigationTitle ? (actor?.name ?? "Actor") : "")
         .navigationBarTitleDisplayMode(.inline)
         .navigationDestination(item: $selectedMovie) { movie in
             MovieDetailView(movie: movie)
